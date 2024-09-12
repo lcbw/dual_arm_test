@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+<xacro:macro name="env_ur" params=
+  "ur_type 
+  parent_link 
+  tf_prefix 
+  use_fake_hardware 
+  fake_sensor_commands 
+  generate_ros2_control_tag
+  joint_limits_file:=''
+  robot_ip:=''
+  script_command_port
+  reverse_port
+  script_sender_port
+  trajectory_port
+  non_blocking_read:='true'
+  keep_alive_count:='10'
+  headless_mode:='true'"
+  >
+
+  <!--Use default joint limits if joint_limits_file param is empty-->
+  <xacro:if value="${joint_limits_file == ''}">
+    <xacro:property name="joint_limits_params_file" value="$(find ur_description)/config/${ur_type}/joint_limits.yaml"/>
+  </xacro:if>
+  <xacro:unless value="${joint_limits_file == ''}">
+    <xacro:property name="joint_limits_params_file" value="${joint_limits_file}"/>
+  </xacro:unless>
+  
+  <!-- import main macro -->
+  <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
+
+  <!-- arm -->
+  <!-- Likely  -->
+  <xacro:if value="${use_fake_hardware}">
+    <xacro:ur_robot
+      name="${ur_type}"
+      tf_prefix="${tf_prefix}"
+      parent="${parent_link}"
+      joint_limits_parameters_file="${joint_limits_params_file}"
+      kinematics_parameters_file="$(find ur_description)/config/${ur_type}/default_kinematics.yaml"
+      physical_parameters_file="$(find ur_description)/config/${ur_type}/physical_parameters.yaml"
+      visual_parameters_file="$(find ur_description)/config/${ur_type}/visual_parameters.yaml"
+      generate_ros2_control_tag="${generate_ros2_control_tag}"
+      use_fake_hardware="${use_fake_hardware}"
+      fake_sensor_commands="${fake_sensor_commands}"
+      script_filename="$(find ur_client_library)/resources/external_control.urscript"
+      output_recipe_filename="$(find ur_robot_driver)/resources/rtde_output_recipe.txt"
+      input_recipe_filename="$(find ur_robot_driver)/resources/rtde_input_recipe.txt"
+      non_blocking_read="${non_blocking_read}"
+      keep_alive_count="${keep_alive_count}"
+      headless_mode="${headless_mode}"
+      >
+      <origin xyz="0 0 0" rpy="0 0 0" />          <!-- position robot in the parent frame -->
+    </xacro:ur_robot>
+  </xacro:if>
+  <xacro:unless value="${use_fake_hardware}">
+    <xacro:ur_robot
+      name="${ur_type}"
+      tf_prefix="${tf_prefix}"
+      robot_ip="${robot_ip}"
+      parent="${parent_link}"
+      joint_limits_parameters_file="${joint_limits_params_file}"
+      kinematics_parameters_file="$(find ur_description)/config/${ur_type}/default_kinematics.yaml"
+      physical_parameters_file="$(find ur_description)/config/${ur_type}/physical_parameters.yaml"
+      visual_parameters_file="$(find ur_description)/config/${ur_type}/visual_parameters.yaml"
+      generate_ros2_control_tag="${generate_ros2_control_tag}"
+      use_fake_hardware="${use_fake_hardware}"
+      fake_sensor_commands="${fake_sensor_commands}"
+      script_filename="$(find ur_client_library)/resources/external_control.urscript"
+      output_recipe_filename="$(find ur_robot_driver)/resources/rtde_output_recipe.txt"
+      input_recipe_filename="$(find ur_robot_driver)/resources/rtde_input_recipe.txt"
+      script_command_port="${script_command_port}"
+      reverse_port="${reverse_port}"
+      script_sender_port="${script_sender_port}"
+      trajectory_port="${trajectory_port}"
+      non_blocking_read="${non_blocking_read}"
+      keep_alive_count="${keep_alive_count}"
+      headless_mode="${headless_mode}"
+      >
+      <origin xyz="0 0 0" rpy="0 0 0" />          <!-- position robot in the parent frame -->
+    </xacro:ur_robot>
+  </xacro:unless>
+</xacro:macro>
+</robot>
