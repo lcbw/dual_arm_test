@@ -55,7 +55,7 @@ def launch(context, *args, **kwargs):
           PathJoinSubstitution(
               [
                   FindPackageShare("dual_arm_test"),
-                  "armatrix.xacro",
+                  "urdf/env.xacro",
               ],
             ),
             " ",
@@ -80,7 +80,7 @@ def launch(context, *args, **kwargs):
   robot_controllers = PathJoinSubstitution(
     [
       FindPackageShare("dual_arm_test"),
-      "controllers.yaml",
+      "config/controllers.yaml",
     ],
   )
 
@@ -117,7 +117,6 @@ def launch(context, *args, **kwargs):
       executable="rviz2",
       name="rviz2",
       output="log",
-      arguments=["-d", rviz_config_file],
   )
 
   jtc = Node(
@@ -134,13 +133,6 @@ def launch(context, *args, **kwargs):
             ]
   )
 
-  delay_joint_trajectory_controller = RegisterEventHandler(
-      event_handler=OnProcessExit(
-          target_action=r1_admit,
-          on_exit=[jtc],
-      )
-  )
-
   delay_trajectory_loader = RegisterEventHandler(
       event_handler=OnProcessExit(
           target_action=jtc,
@@ -150,10 +142,9 @@ def launch(context, *args, **kwargs):
 
   nodes = [
       base_control_launch,
-      r1_admit,
       ft1,
       jsb,
-      delay_joint_trajectory_controller,
+      jtc,
       delay_trajectory_loader,
       robot_state_pub_node,
       rviz_node]
