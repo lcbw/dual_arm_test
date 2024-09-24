@@ -48,7 +48,6 @@
       input_recipe_filename="$(find ur_robot_driver)/resources/rtde_input_recipe.txt"
       non_blocking_read="${non_blocking_read}"
       keep_alive_count="${keep_alive_count}"
-      headless_mode="${headless_mode}"
       >
       <origin xyz="0 0 0" rpy="0 0 0" />          <!-- position robot in the parent frame -->
     </xacro:ur_robot>

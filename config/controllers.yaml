@@ -8,9 +8,6 @@ controller_manager:
     robot1_force_torque_sensor_broadcaster:
       type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
 
-    robot1_admittance_controller:
-      type: admittance_controller/AdmittanceController
-
     faked_forces_controller:
       type: forward_command_controller/MultiInterfaceForwardCommandController
 
@@ -26,105 +23,6 @@ robot1_force_torque_sensor_broadcaster:
     sensor_name: robot1/tcp_fts_sensor
     frame_id: robot1/wrist_3_link
     additional_frames_to_publish: [robot1/base_link]
-
-robot1_admittance_controller:
-    ros__parameters:
-      joints:
-        - robot1/shoulder_pan_joint
-        - robot1/shoulder_lift_joint
-        - robot1/elbow_joint
-        - robot1/wrist_1_joint
-        - robot1/wrist_2_joint
-        - robot1/wrist_3_joint
-      command_joints:
-        - robot1/shoulder_pan_joint
-        - robot1/shoulder_lift_joint
-        - robot1/elbow_joint
-        - robot1/wrist_1_joint
-        - robot1/wrist_2_joint
-        - robot1/wrist_3_joint
-      command_interfaces:
-        - position
-
-      state_interfaces:
-        - position
-        - velocity
-      chainable_command_interfaces:
-        - position
-        - velocity
-      kinematics:
-        plugin_name: kinematics_interface_kdl/KinematicsInterfaceKDL
-        plugin_package: kinematics_interface
-        base: robot1/base_link # Assumed to be stationary
-        tip: robot1/tool0
-        group_name: arm
-        alpha: 0.0005
-
-      ft_sensor:
-        name: robot1/tcp_fts_sensor
-        frame:
-          id: robot1/tool0  # tool0 Wrench measurements are in this frame
-          external: false # force torque frame exists within URDF kinematic chain
-        filter_coefficient: 0.005
-
-#      use_joint_commands_as_input: true
-
-      control:
-        frame:
-          id: robot1/tool0 # Admittance calcs (displacement etc) are done in this frame. Usually the tool or end-effector
-#          external: false # control frame exists within URDF kinematic chain
-
-      fixed_world_frame:   # Gravity points down (neg. Z) in this frame (Usually: world or base_link)
-        frame:
-          id: robot1/base_link  # Admittance calcs (displacement etc) are done in this frame. Usually the tool or end-effector
-#          external: false # control frame exists within URDF kinematic chain
-
-      gravity_compensation:
-        frame:
-          id: robot1/tool0
-#          external: false
-
-        CoG: # specifies the center of gravity of the end effector
-          pos:
-            - 0.0 # x
-            - 0.0 # y
-            - 0.0 # z
-          force: 0.0 # mass * 9.81
-
-
-      admittance:
-        selected_axes:
-          - true # x
-          - true # y
-          - true # z
-          - true # rx
-          - true # ry
-          - true # rz
-        # Having ".0" at the end is MUST, otherwise there is a loading error
-        # F = M*a + D*v + S*(x - x_d)
-        mass:
-          - 5.5
-          - 6.6
-          - 7.7
-          - 8.8
-          - 9.9
-          - 10.10
-        damping_ratio: # damping can be used instead: zeta = D / (2 * sqrt( M * S ))
-          - 2.828427 # x
-          - 2.828427 # y
-          - 2.828427 # z
-          - 2.828427 # rx
-          - 2.828427 # ry
-          - 2.828427 # rz
-        stiffness:
-          - 214.1
-          - 214.2
-          - 214.3
-          - 214.4
-          - 214.5
-          - 214.6
-        # general settings
-        enable_parameter_update_without_reactivation: true
 
 faked_forces_controller:
   ros__parameters:
@@ -153,12 +51,12 @@ joint_trajectory_controller:
       - robot2/wrist_2_joint
       - robot2/wrist_3_joint
     command_joints:
-      - robot1_admittance_controller/robot1/shoulder_pan_joint
-      - robot1_admittance_controller/robot1/shoulder_lift_joint
-      - robot1_admittance_controller/robot1/elbow_joint
-      - robot1_admittance_controller/robot1/wrist_1_joint
-      - robot1_admittance_controller/robot1/wrist_2_joint
-      - robot1_admittance_controller/robot1/wrist_3_joint
+      - robot1/shoulder_pan_joint
+      - robot1/shoulder_lift_joint
+      - robot1/elbow_joint
+      - robot1/wrist_1_joint
+      - robot1/wrist_2_joint
+      - robot1/wrist_3_joint
       - robot2/shoulder_pan_joint
       - robot2/shoulder_lift_joint
       - robot2/elbow_joint
@@ -167,7 +65,6 @@ joint_trajectory_controller:
       - robot2/wrist_3_joint
     command_interfaces:
       - position
-      - velocity
     state_interfaces:
       - position
       - velocity
@@ -178,14 +75,3 @@ joint_trajectory_controller:
 #    allow_integration_in_goal_trajectories: true
     constraints:
       stopped_velocity_tolerance: 0.01 # Defaults to 0.01
-
-faked_forces_controller:
-  ros__parameters:
-    joint: robot1/tcp_fts_sensor
-    interface_names:
-      - force.x
-      - force.y
-      - force.z
-      - torque.x
-      - torque.y
-      - torque.z

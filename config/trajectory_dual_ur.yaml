@@ -1,7 +1,5 @@
 header: {stamp: {sec: 0, nanosec: 0}, frame_id: ""}
-joint_names: ['robot1/shoulder_pan_joint', 'robot1/shoulder_lift_joint', 'robot1/elbow_joint', 'robot1/wrist_1_joint',
-              'robot1/wrist_2_joint', 'robot1/wrist_3_joint', 'robot2/shoulder_pan_joint', 'robot2/shoulder_lift_joint',
-              'robot2/elbow_joint', 'robot2/wrist_1_joint', 'robot2/wrist_2_joint', 'robot2/wrist_3_joint']
+joint_names: ['robot1/shoulder_pan_joint', 'robot1/shoulder_lift_joint', 'robot1/elbow_joint', 'robot1/wrist_1_joint', 'robot1/wrist_2_joint', 'robot1/wrist_3_joint', 'robot2/elbow_joint', 'robot2/wrist_1_joint', 'robot2/wrist_2_joint', 'robot2/wrist_3_joint']
 points:
   - positions: [0.0, 0.0, 1.57, 0.0, 0.0, 0.785, 0.0, 0.0, 1.57, 0.0, 0.0, 0.785]
     velocities: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]

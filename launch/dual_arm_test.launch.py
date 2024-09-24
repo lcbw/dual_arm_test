@@ -55,12 +55,12 @@ def launch(context, *args, **kwargs):
           PathJoinSubstitution(
               [
                   FindPackageShare("dual_arm_test"),
-                  "urdf/env.xacro",
+                  "urdf/top_level.xacro",
               ],
             ),
             " ",
             "single_arm_setup:=",
-            single_arm,
+            str(single_arm),
             " ",
             "robot_ip:=",
             robot_ip,
@@ -80,6 +80,7 @@ def launch(context, *args, **kwargs):
   )
   robot_description = {"robot_description": robot_description_content}
 
+  print(f"{robot_description_content}")
   robot_controllers = PathJoinSubstitution(
     [
       FindPackageShare("dual_arm_test"),
