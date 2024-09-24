@@ -27,7 +27,7 @@ class MotionPlanFromFileNode(Node):
     def __init__(self):
         super().__init__('motion_plan_from_file')
         self.declare_parameter("trajectory_file_path","config/naive_trajectory_single_ur_horizontal.yaml")
-        self.declare_parameter("package_param","armatrix_support")
+        self.declare_parameter("package_param","dual_arm_test")
 
         file_path = os.path.join(get_package_share_directory(self.get_parameter("package_param").value), self.get_parameter("trajectory_file_path").value)
         self.joints = self.open_file(file_path)

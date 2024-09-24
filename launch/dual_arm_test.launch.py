@@ -112,7 +112,7 @@ def launch(context, *args, **kwargs):
   )
 
   trajectory_loader = Node(
-        package="armatrix_support",
+        package="dual_arm_test",
         executable="trajectory_loader.py",
         parameters=[
             {"trajectory_file_path": "config/trajectory_dual_ur.yaml"}
