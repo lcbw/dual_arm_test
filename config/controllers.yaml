@@ -8,6 +8,12 @@ controller_manager:
     robot1_force_torque_sensor_broadcaster:
       type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
 
+    robot1_admittance_controller:
+      type: admittance_controller/AdmittanceController
+
+    faked_forces_controller:
+      type: forward_command_controller/MultiInterfaceForwardCommandController
+
     joint_trajectory_controller:
       type: joint_trajectory_controller/JointTrajectoryController
 
@@ -85,6 +91,7 @@ robot1_admittance_controller:
             - 0.0 # z
           force: 0.0 # mass * 9.81
 
+
       admittance:
         selected_axes:
           - true # x
@@ -119,6 +126,17 @@ robot1_admittance_controller:
         # general settings
         enable_parameter_update_without_reactivation: true
 
+faked_forces_controller:
+  ros__parameters:
+    joint: robot1/tcp_fts_sensor
+    interface_names:
+      - force.x
+      - force.y
+      - force.z
+      - torque.x
+      - torque.y
+      - torque.z
+
 joint_trajectory_controller:
   ros__parameters:
     joints:
@@ -135,12 +153,12 @@ joint_trajectory_controller:
       - robot2/wrist_2_joint
       - robot2/wrist_3_joint
     command_joints:
-      - robot1/shoulder_pan_joint
-      - robot1/shoulder_lift_joint
-      - robot1/elbow_joint
-      - robot1/wrist_1_joint
-      - robot1/wrist_2_joint
-      - robot1/wrist_3_joint
+      - robot1_admittance_controller/robot1/shoulder_pan_joint
+      - robot1_admittance_controller/robot1/shoulder_lift_joint
+      - robot1_admittance_controller/robot1/elbow_joint
+      - robot1_admittance_controller/robot1/wrist_1_joint
+      - robot1_admittance_controller/robot1/wrist_2_joint
+      - robot1_admittance_controller/robot1/wrist_3_joint
       - robot2/shoulder_pan_joint
       - robot2/shoulder_lift_joint
       - robot2/elbow_joint
@@ -160,3 +178,14 @@ joint_trajectory_controller:
 #    allow_integration_in_goal_trajectories: true
     constraints:
       stopped_velocity_tolerance: 0.01 # Defaults to 0.01
+
+faked_forces_controller:
+  ros__parameters:
+    joint: robot1/tcp_fts_sensor
+    interface_names:
+      - force.x
+      - force.y
+      - force.z
+      - torque.x
+      - torque.y
+      - torque.z

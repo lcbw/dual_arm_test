@@ -91,18 +91,6 @@ def launch(context, *args, **kwargs):
               "controllers_file": robot_controllers,
       }.items(),)
 
-  ft1 = Node(
-      package="controller_manager",
-      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
-      arguments=['robot1_force_torque_sensor_broadcaster', "-c", "/controller_manager"],
-  )
-  
-  jsb = Node(
-      package="controller_manager",
-      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
-      arguments=['joint_state_broadcaster', "-c", "/controller_manager"],
-  )
-
   robot_state_pub_node = Node(
       package="robot_state_publisher",
       executable="robot_state_publisher",
@@ -119,12 +107,6 @@ def launch(context, *args, **kwargs):
       output="log",
   )
 
-  jtc = Node(
-      package="controller_manager",
-      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
-      arguments=['joint_trajectory_controller', "-c", "/controller_manager"],
-  )
-
   trajectory_loader = Node(
         package="armatrix_support",
         executable="trajectory_loader.py",
@@ -133,19 +115,9 @@ def launch(context, *args, **kwargs):
             ]
   )
 
-  delay_trajectory_loader = RegisterEventHandler(
-      event_handler=OnProcessExit(
-          target_action=jtc,
-          on_exit=[trajectory_loader],
-      )
-  )
-
   nodes = [
       base_control_launch,
-      ft1,
-      jsb,
-      jtc,
-      delay_trajectory_loader,
+      trajectory_loader,
       robot_state_pub_node,
       rviz_node]
 
