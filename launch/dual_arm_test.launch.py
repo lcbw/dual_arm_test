@@ -17,7 +17,7 @@ import time
 parameters = [
     {'name': 'robot_description',      'description': 'Path to the URDF/xacro file',                  'default': ''},
     {'name': 'controllers_file',       'description': 'Path to the ros2_control configuration file',  'default': 'controllers.yaml'},
-    {'name': 'single_arm',       'description': 'simulating_1_arm=true, 2_arms=false',  'default': 'true'},
+    {'name': 'single_arm',       'description': 'simulating_1_arm=true, 2_arms=false',  'default': 'false'},
     {'name': 'tf_prefix',       'description': 'tf prefix',  'default': ''},
     {'name': 'use_fake_hardware',   'description': 'Start robot with fake hardware mirroring command to its states.',   'default': 'true'},
     {'name': 'fake_sensor_commands',   'description': 'Enable fake command interfaces for sensors used for simple simulations. Used only if use_fake_hardware parameter is true.',   'default': 'true'},
@@ -88,6 +88,10 @@ def launch(context, *args, **kwargs):
     ],
   )
 
+  rviz_config_file = PathJoinSubstitution(
+      [FindPackageShare("dual_arm_test"), "config", "dual_arm_test.rviz"]
+  )
+
   base_control_launch =  IncludeLaunchDescription(
       PythonLaunchDescriptionSource([FindPackageShare("dual_arm_test"), "/launch/ros2_control.launch.py"]),
       launch_arguments={
@@ -109,6 +113,7 @@ def launch(context, *args, **kwargs):
       executable="rviz2",
       name="rviz2",
       output="log",
+      arguments=["-d",rviz_config_file]
   )
 
   trajectory_loader = Node(

@@ -9,13 +9,14 @@
   generate_ros2_control_tag
   joint_limits_file:=''
   robot_ip:=''
+  reverse_ip:=''
   script_command_port
   reverse_port
   script_sender_port
   trajectory_port
   non_blocking_read:='true'
   keep_alive_count:='10'
-  headless_mode:='true'"
+  headless_mode"
   >
 
   <!--Use default joint limits if joint_limits_file param is empty-->
@@ -57,6 +58,7 @@
       name="${ur_type}"
       tf_prefix="${tf_prefix}"
       robot_ip="${robot_ip}"
+      reverse_ip="${reverse_ip}"
       parent="${parent_link}"
       joint_limits_parameters_file="${joint_limits_params_file}"
       kinematics_parameters_file="$(find ur_description)/config/${ur_type}/default_kinematics.yaml"
