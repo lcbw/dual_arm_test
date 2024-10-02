@@ -131,7 +131,7 @@ class MotionPlanFromFileNode(Node):
         result = future.result().result
         self.get_logger().info(f"Done with result: {self.error_code_to_str(result.error_code)}")
         if result.error_code == FollowJointTrajectory.Result.SUCCESSFUL:
-            time.sleep(2)
+            time.sleep(0)
             self.execute_next_trajectory()
 
     @staticmethod

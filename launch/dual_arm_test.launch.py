@@ -99,6 +99,7 @@ def launch(context, *args, **kwargs):
               "controllers_file": robot_controllers,
       }.items(),)
 
+
   robot_state_pub_node = Node(
       package="robot_state_publisher",
       executable="robot_state_publisher",
@@ -124,11 +125,80 @@ def launch(context, *args, **kwargs):
             ]
   )
 
+  r1_admit = Node(
+      package="controller_manager",
+      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
+      arguments=['robot1_admittance_controller', "-c", "/controller_manager"],
+  )
+
+#  r2_admit = Node(
+#      package="controller_manager",
+#      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
+#      arguments=['robot2_admittance_controller', "-c", "/controller_manager"],
+#  )
+
+  ft1 = Node(
+      package="controller_manager",
+      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
+      arguments=['robot1_force_torque_sensor_broadcaster', "-c", "/controller_manager"],
+  )
+
+#  ft2 = Node(
+#      package="controller_manager",
+#      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
+#      arguments=['robot2_force_torque_sensor_broadcaster', "-c", "/controller_manager"],
+#  )
+
+  jsb = Node(
+      package="controller_manager",
+      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
+      arguments=['joint_state_broadcaster', "-c", "/controller_manager"],
+  )
+
+  jtc = Node(
+      package="controller_manager",
+      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
+      arguments=['joint_trajectory_controller', "-c", "/controller_manager"],
+  )
+
+#  r2_jtc = Node(
+#      package="controller_manager",
+#      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
+#      arguments=['robot2_joint_trajectory_controller', "-c", "/controller_manager"],
+#  )
+
+
+
+  delay_joint_trajectory_controller = RegisterEventHandler(
+      event_handler=OnProcessExit(
+          target_action=r1_admit,
+          on_exit=[jtc],
+      )
+  )
+
+  delay_trajectory_loader = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=jtc,
+            on_exit=[trajectory_loader],
+        )
+    )
+
   nodes = [
-      base_control_launch,
-      trajectory_loader,
-      robot_state_pub_node,
-      rviz_node]
+        base_control_launch,
+       ft1,
+       r1_admit,
+       jsb,
+       delay_joint_trajectory_controller,
+       delay_trajectory_loader,
+       robot_state_pub_node,
+       rviz_node]
+
+
+#  nodes = [
+#      base_control_launch,
+#      trajectory_loader,
+#      robot_state_pub_node,
+#      rviz_node]
 
 
   return nodes
