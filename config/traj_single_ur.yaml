@@ -1,0 +1,54 @@
+header: {stamp: {sec: 0, nanosec: 0}, frame_id: ""}
+joint_names: ['robot1/shoulder_pan_joint', 'robot1/shoulder_lift_joint',
+              'robot1/elbow_joint', 'robot1/wrist_1_joint', 'robot1/wrist_2_joint', 'robot1/wrist_3_joint']
+
+points:
+  - positions: [-4.0, -1.6, 2.0, -1.6, 0.0, 0.8]
+    velocities: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    accelerations: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    effort: []
+    time_from_start:
+      sec: 0
+      nanosec: 0
+  - positions: [-4.0, -2.0, 2.2, -1.6, 0.0, 0.8]
+    velocities: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    accelerations: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    effort: []
+    time_from_start:
+      sec: 8
+      nanosec: 0
+  - positions: [-4.0, -2.2, 2.4, -1.6, 0.0, 0.8]
+    velocities: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    accelerations: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    effort: []
+    time_from_start:
+      sec: 16
+      nanosec: 0
+  - positions: [-4.0, -2.4, 2.6, -1.6, 0.0, 0.8]
+    velocities: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    accelerations: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    effort: []
+    time_from_start:
+      sec: 24
+      nanosec: 0
+  - positions: [-4.0, -2.2, 2.4, -1.6, 0.0, 0.8]
+    velocities: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    accelerations: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    effort: []
+    time_from_start:
+      sec: 32
+      nanosec: 0
+  - positions: [-4.0, -2.0, 2.2, -1.6, 0.0, 0.8]
+    velocities: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    accelerations: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    effort: []
+    time_from_start:
+      sec: 40
+      nanosec: 0
+  - positions: [-4.0, -1.6, 2.0, -1.6, 0.0, 0.8]
+    velocities: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    accelerations: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    effort: []
+    time_from_start:
+      sec: 48
+      nanosec: 01

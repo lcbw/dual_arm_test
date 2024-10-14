@@ -14,14 +14,28 @@ import yaml
 import os
 import time
 
+
+def default_trajectory_file():
+    filename = PathJoinSubstitution(
+        [
+            FindPackageShare('dual_arm_test'),
+            'config',
+            'traj_single_ur.yaml'
+        ]
+    )
+    return filename
+
+
 parameters = [
+    {'name': 'trajectory_file',       'description': 'Trajectory file', 'default': default_trajectory_file()},
+    {'name': 'n_cycles',              'description': 'Number of times to repeat the trajectory', 'default': '100'},
     {'name': 'robot_description',      'description': 'Path to the URDF/xacro file',                  'default': ''},
     {'name': 'controllers_file',       'description': 'Path to the ros2_control configuration file',  'default': 'controllers.yaml'},
     {'name': 'single_arm',       'description': 'simulating_1_arm=true, 2_arms=false',  'default': 'false'},
     {'name': 'tf_prefix',       'description': 'tf prefix',  'default': ''},
     {'name': 'use_fake_hardware',   'description': 'Start robot with fake hardware mirroring command to its states.',   'default': 'true'},
     {'name': 'fake_sensor_commands',   'description': 'Enable fake command interfaces for sensors used for simple simulations. Used only if use_fake_hardware parameter is true.',   'default': 'true'},
-    {'name': 'robot_ip',       'description': 'simulating_1_arm=true, 2_arms=false',  'default': '172.31.1.137'},
+    {'name': 'robot_ip',       'description': 'simulating_1_arm=true, 2_arms=false',  'default': '172.31.1.138'},
     {'name': 'robot_ip_2',       'description': 'simulating_1_arm=true, 2_arms=false',  'default': '172.31.1.138'},
     {'name': 'ur_type',       'description': 'ur type',  'default': 'ur5e'},
     ]
@@ -117,88 +131,22 @@ def launch(context, *args, **kwargs):
       arguments=["-d",rviz_config_file]
   )
 
-  trajectory_loader = Node(
-        package="dual_arm_test",
-        executable="trajectory_loader.py",
-        parameters=[
-            {"trajectory_file_path": "config/trajectory_dual_ur.yaml"}
-            ]
+  trajectory_executor = Node(
+      package='dual_arm_test',
+      executable='trajectory_executor.py',
+      parameters=[
+          {
+              'trajectory_file': LaunchConfiguration('trajectory_file'),
+              'fjt_action': 'joint_trajectory_controller/follow_joint_trajectory',
+              'n_cycles': LaunchConfiguration('n_cycles'),
+          }
+      ],
   )
-
-  r1_admit = Node(
-      package="controller_manager",
-      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
-      arguments=['robot1_admittance_controller', "-c", "/controller_manager"],
-  )
-
-#  r2_admit = Node(
-#      package="controller_manager",
-#      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
-#      arguments=['robot2_admittance_controller', "-c", "/controller_manager"],
-#  )
-
-  ft1 = Node(
-      package="controller_manager",
-      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
-      arguments=['robot1_force_torque_sensor_broadcaster', "-c", "/controller_manager"],
-  )
-
-#  ft2 = Node(
-#      package="controller_manager",
-#      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
-#      arguments=['robot2_force_torque_sensor_broadcaster', "-c", "/controller_manager"],
-#  )
-
-  jsb = Node(
-      package="controller_manager",
-      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
-      arguments=['joint_state_broadcaster', "-c", "/controller_manager"],
-  )
-
-  jtc = Node(
-      package="controller_manager",
-      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
-      arguments=['joint_trajectory_controller', "-c", "/controller_manager"],
-  )
-
-#  r2_jtc = Node(
-#      package="controller_manager",
-#      executable='spawner' if os.environ['ROS_DISTRO'] > 'foxy' else 'spawner.py',
-#      arguments=['robot2_joint_trajectory_controller', "-c", "/controller_manager"],
-#  )
-
-
-
-  delay_joint_trajectory_controller = RegisterEventHandler(
-      event_handler=OnProcessExit(
-          target_action=r1_admit,
-          on_exit=[jtc],
-      )
-  )
-
-  delay_trajectory_loader = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=jtc,
-            on_exit=[trajectory_loader],
-        )
-    )
 
   nodes = [
-        base_control_launch,
-       ft1,
-       r1_admit,
-       jsb,
-       delay_joint_trajectory_controller,
-       delay_trajectory_loader,
+       base_control_launch,
        robot_state_pub_node,
+       trajectory_executor,
        rviz_node]
-
-
-#  nodes = [
-#      base_control_launch,
-#      trajectory_loader,
-#      robot_state_pub_node,
-#      rviz_node]
-
 
   return nodes

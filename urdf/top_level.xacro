@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <robot name="top_level" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:arg name="single_arm_setup" default="true"/>
   <xacro:arg name="robot_ip" default="0.0.0.0"/>
   <xacro:arg name="robot_ip_2" default="0.0.0.0"/>
   <xacro:arg name="computer_ip" default="172.31.1.17"/>
@@ -8,7 +9,8 @@
   <xacro:arg name="headless_mode" default="true"/>
   <xacro:arg name="ur_type" default="ur10e"/>
   <xacro:include filename="$(find dual_arm_test)/urdf/env.xacro"/>
-  <xacro:env single_arm_setup="false"
+
+  <xacro:env single_arm_setup="$(arg single_arm_setup)"
     fake_sensor_commands="$(arg fake_sensor_commands)"
     use_fake_hardware="$(arg use_fake_hardware)"
     robot_ip="$(arg robot_ip)"

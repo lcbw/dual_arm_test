@@ -12,7 +12,7 @@ install(DIRECTORY urdf launch config DESTINATION share/${PROJECT_NAME}/)
 # Install Python modules
 ament_python_install_package(${PROJECT_NAME})
 
-install(PROGRAMS scripts/trajectory_loader.py
+install(PROGRAMS scripts/trajectory_executor.py
         DESTINATION lib/${PROJECT_NAME})
 
 ament_package()

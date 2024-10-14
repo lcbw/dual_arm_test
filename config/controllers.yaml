@@ -131,12 +131,6 @@ joint_trajectory_controller:
       - robot1/wrist_1_joint
       - robot1/wrist_2_joint
       - robot1/wrist_3_joint
-      - robot2/shoulder_pan_joint
-      - robot2/shoulder_lift_joint
-      - robot2/elbow_joint
-      - robot2/wrist_1_joint
-      - robot2/wrist_2_joint
-      - robot2/wrist_3_joint
     command_joints:
       - robot1_admittance_controller/robot1/shoulder_pan_joint
       - robot1_admittance_controller/robot1/shoulder_lift_joint
@@ -144,12 +138,6 @@ joint_trajectory_controller:
       - robot1_admittance_controller/robot1/wrist_1_joint
       - robot1_admittance_controller/robot1/wrist_2_joint
       - robot1_admittance_controller/robot1/wrist_3_joint
-      - robot2/shoulder_pan_joint
-      - robot2/shoulder_lift_joint
-      - robot2/elbow_joint
-      - robot2/wrist_1_joint
-      - robot2/wrist_2_joint
-      - robot2/wrist_3_joint
     command_interfaces:
       - position
     state_interfaces:
